@@ -1,3 +1,4 @@
+using Gateway.Core.Middlwares;
 using Gateway.Data;
 using Gateway.Logic;
 using Gateway.Logic.Profiles;
@@ -27,8 +28,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseHttpsRedirection();
 app.MapControllers();
 
 try
