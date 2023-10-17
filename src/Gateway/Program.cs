@@ -16,9 +16,12 @@ builder.Services.AddDbContext<HowToLearnDbContext>(options =>
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<ISectionRepository, SectionRepository>();
+builder.Services.AddTransient<ITopicRepository, TopicRepository>();
 builder.Services.AddTransient<ISectionLogic, SectionLogic>();
+builder.Services.AddTransient<ITopicLogic, TopicLogic>();
 
 builder.Services.AddAutoMapper(typeof(SectionMapperProfile));
+builder.Services.AddAutoMapper(typeof(TopicMapperProfile));
 
 var app = builder.Build();
 

@@ -15,12 +15,12 @@ namespace Gateway.Repository
             => await this.GetOperationAsync<Section>().ConfigureAwait(false);
 
         public async Task AddSectionAsync(Section section)
-            => await this.AddOperationAsync<Section>(section).ConfigureAwait(false);
+            => await this.AddOperationAsync(section).ConfigureAwait(false);
 
         public async Task RemoveSectionAsync(Guid id)
-            => await this.RemoveOperationAsync<Section>(id).ConfigureAwait(false);
+            => await RemoveOperationAsync<Section>(id).ConfigureAwait(false);
 
         public async Task UpdateSectionAsync(Section updatedSection)
-            => await this.UpdateOperationAsync<Section>(updatedSection).ConfigureAwait(false);
+            => await this.UpdateOperationAsync(updatedSection).ConfigureAwait(false);
     }
 }
