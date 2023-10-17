@@ -1,9 +1,10 @@
-var builder = WebApplication.CreateBuilder(args);
 using Gateway.Data;
+using Gateway.Logic;
+using Gateway.Logic.Profiles;
 using Gateway.Repository;
 using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -12,11 +13,14 @@ builder.Services.AddDbContext<HowToLearnDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["Data:Database:ConnectionString"]);
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<ISectionRepository, SectionRepository>();
+builder.Services.AddTransient<ISectionLogic, SectionLogic>();
+
+builder.Services.AddAutoMapper(typeof(SectionMapperProfile));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
