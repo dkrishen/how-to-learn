@@ -1,5 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 using Gateway.Data;
+using Gateway.Repository;
 using Microsoft.EntityFrameworkCore;
 
 // Add services to the container.
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<HowToLearnDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["Data:Database:ConnectionString"]);
 });
+builder.Services.AddTransient<ISectionRepository, SectionRepository>();
 
 var app = builder.Build();
 
