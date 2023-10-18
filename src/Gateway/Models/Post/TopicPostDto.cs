@@ -1,4 +1,4 @@
-﻿namespace Gateway.Models.PostDto
+﻿namespace Gateway.Models.Post
 {
     public class TopicPostDto
     {

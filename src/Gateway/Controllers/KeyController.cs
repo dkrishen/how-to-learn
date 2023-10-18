@@ -7,47 +7,47 @@ namespace Gateway.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TopicController : ControllerBase
+    public class KeyController : ControllerBase
     {
-        private readonly ITopicLogic _topicLogic;
+        private readonly IKeyLogic _keyLogic;
 
-        public TopicController(ITopicLogic topicLogic)
+        public KeyController(IKeyLogic keyLogic)
         {
-            _topicLogic = topicLogic;
+            _keyLogic = keyLogic;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _topicLogic.GetTopicAsync(id).ConfigureAwait(false);
+            var result = await _keyLogic.GetKeyAsync(id).ConfigureAwait(false);
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _topicLogic.GetTopicsAsync().ConfigureAwait(false);
+            var result = await _keyLogic.GetKeysAsync().ConfigureAwait(false);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] TopicPostDto topic)
+        public async Task<IActionResult> Post([FromBody] KeyPostDto key)
         {
-            await _topicLogic.AddTopicAsync(topic).ConfigureAwait(false);
+            await _keyLogic.AddKeyAsync(key).ConfigureAwait(false);
             return Ok();
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
-            await _topicLogic.DeleteTopicAsync(id).ConfigureAwait(false);
+            await _keyLogic.DeleteKeyAsync(id).ConfigureAwait(false);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] TopicUpdateDto topic)
+        public async Task<IActionResult> Put([FromBody] KeyUpdateDto key)
         {
-            await _topicLogic.UpdateTopicAsync(topic).ConfigureAwait(false);
+            await _keyLogic.UpdateKeyAsync(key).ConfigureAwait(false);
             return Ok();
         }
     }

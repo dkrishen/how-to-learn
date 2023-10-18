@@ -1,5 +1,4 @@
-﻿using Gateway.Core.Models;
-using Gateway.Data;
+﻿using Gateway.Data;
 using Gateway.Models.Entities;
 
 namespace Gateway.Repository

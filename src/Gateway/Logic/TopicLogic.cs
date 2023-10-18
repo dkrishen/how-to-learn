@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Gateway.Models.Entities;
-using Gateway.Models.PostDto;
+using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Gateway.Models.View;
 using Gateway.Repository;
