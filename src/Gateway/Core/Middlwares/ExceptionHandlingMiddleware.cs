@@ -1,50 +1,49 @@
 ﻿using Gateway.Core.Models;
 using System.Net;
 
-namespace Gateway.Core.Middlwares
+namespace Gateway.Core.Middlwares;
+
+public class ExceptionHandlingMiddleware
 {
-    public class ExceptionHandlingMiddleware
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-        private readonly RequestDelegate _next;
+        _logger = logger;
+        _next = next;
+    }
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    public async Task InvokeAsync(HttpContext httpContext)
+    {
+        try
         {
-            _logger = logger;
-            _next = next;
+            await _next(httpContext);
         }
-
-        public async Task InvokeAsync(HttpContext httpContext)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(httpContext);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(httpContext,
-                    ex.Message,
-                    HttpStatusCode.InternalServerError,
-                    "Internal Server Error");
-            }
+            await HandleExceptionAsync(httpContext,
+                ex.Message,
+                HttpStatusCode.InternalServerError,
+                "Internal Server Error");
         }
+    }
 
-        public async Task HandleExceptionAsync(HttpContext httpContext, string exceptionMessage, HttpStatusCode statusCode, string message)
+    public async Task HandleExceptionAsync(HttpContext httpContext, string exceptionMessage, HttpStatusCode statusCode, string message)
+    {
+        _logger.LogError(exceptionMessage);
+
+        HttpResponse response = httpContext.Response;
+        response.ContentType = "application/json";
+        response.StatusCode = (int)statusCode;
+
+        ErrorDto error = new()
         {
-            _logger.LogError(exceptionMessage);
+            Message = message,
+            StatusCode = response.StatusCode
+        };
 
-            HttpResponse response = httpContext.Response;
-            response.ContentType = "application/json";
-            response.StatusCode = (int)statusCode;
-
-            ErrorDto error = new()
-            {
-                Message = message,
-                StatusCode = response.StatusCode
-            };
-
-            string result = error.ToString();
-            await response.WriteAsJsonAsync(result);
-        }
+        string result = error.ToString();
+        await response.WriteAsJsonAsync(result);
     }
 }

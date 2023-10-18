@@ -1,15 +1,14 @@
 ﻿using System.Text.Json;
 
-namespace Gateway.Core.Models
-{
-    public class ErrorDto
-    {
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
+namespace Gateway.Core.Models;
 
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this);
-        }
+public class ErrorDto
+{
+    public int StatusCode { get; set; }
+    public string Message { get; set; }
+
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
     }
 }

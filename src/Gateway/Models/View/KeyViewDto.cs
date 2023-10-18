@@ -1,11 +1,10 @@
-﻿namespace Gateway.Models.View
+﻿namespace Gateway.Models.View;
+
+public class KeyViewDto
 {
-    public class KeyViewDto
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public Guid Parent { get; set; }
+    public Guid Parent { get; set; }
 
-        public Guid Reference { get; set; }
-    }
+    public Guid Reference { get; set; }
 }

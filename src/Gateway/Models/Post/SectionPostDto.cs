@@ -1,7 +1,6 @@
-﻿namespace Gateway.Models.Post
+﻿namespace Gateway.Models.Post;
+
+public class SectionPostDto
 {
-    public class SectionPostDto
-    {
-        public string Title { get; set; } = null!;
-    }
+    public string Title { get; set; } = null!;
 }

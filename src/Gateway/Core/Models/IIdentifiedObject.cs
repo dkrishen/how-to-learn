@@ -1,7 +1,6 @@
-﻿namespace Gateway.Core.Models
+﻿namespace Gateway.Core.Models;
+
+public interface IIdentifiedObject
 {
-    public interface IIdentifiedObject
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

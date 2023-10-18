@@ -1,11 +1,10 @@
-﻿namespace Gateway.Models.View
+﻿namespace Gateway.Models.View;
+
+public class SectionViewDto
 {
-    public class SectionViewDto
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Title { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        public string[] Topics { get; set; } = null!;
-    }
+    public string[] Topics { get; set; } = null!;
 }

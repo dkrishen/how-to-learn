@@ -1,11 +1,10 @@
-﻿namespace Gateway.Models.Update
+﻿namespace Gateway.Models.Update;
+
+public class KeyUpdateDto
 {
-    public class KeyUpdateDto
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public Guid Parent { get; set; }
+    public Guid Parent { get; set; }
 
-        public Guid Reference { get; set; }
-    }
+    public Guid Reference { get; set; }
 }

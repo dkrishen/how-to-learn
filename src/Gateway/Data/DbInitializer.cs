@@ -1,10 +1,9 @@
-﻿namespace Gateway.Data
+﻿namespace Gateway.Data;
+
+public class DbInitializer
 {
-    public class DbInitializer
+    public static void Initialize(HowToLearnDbContext context)
     {
-        public static void Initialize(HowToLearnDbContext context)
-        {
-            context.Database.EnsureCreated();
-        }
+        context.Database.EnsureCreated();
     }
 }
