@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import './styles/App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import AppRouter from "./components/AppRouter";
 
 function App() {
+
   return (
-    <div className="App">
-      
-    </div>
+    <BrowserRouter>
+        <AppRouter/>
+    </BrowserRouter>
   );
 }
 
