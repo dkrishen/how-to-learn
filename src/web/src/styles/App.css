@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+}
+
+.App {
+    width: 800px;
+}
+
+.under-header {
+    margin-top: 56px;
+}
+
+@media (min-width: 600px){
+    .under-header {
+        margin-top: 64px;
+    }
+}
