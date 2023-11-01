@@ -10,11 +10,23 @@
 }
 
 .App {
-    width: 800px;
 }
 
 .under-header {
     margin-top: 56px;
+    justify-content: center;
+    position: relative;
+}
+
+.central-box {
+    width: 80%;
+    justify-content: center;
+    max-width: 440px;
+    margin: 40px;
+}
+
+.description-input {
+    width: 100%;
 }
 
 @media (min-width: 600px){

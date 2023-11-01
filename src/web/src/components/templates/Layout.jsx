@@ -5,12 +5,9 @@ import '../../styles/App.css'
 
 const Layout = props => {
     return (
-        <Box>
+        <Box className="central-box">
             <Header/>
-            <Box className="under-header"
-                sx={{
-                    position: "relative"
-                }}>
+            <Box className="under-header ">
                     {props.children}
             </Box>
         </Box>
