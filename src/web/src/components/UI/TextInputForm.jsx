@@ -12,7 +12,7 @@ function TextInputForm({ fieldLabel, fieldRowsCount, fieldPlaceholder, buttonAli
           placeholder={fieldPlaceholder}
         />
         <Box display="flex" justifyContent={buttonAlignment} mt={2} width="100%">
-          <Button type="submit" variant="outlined" sx={{ width: '40%' }}>
+          <Button type="submit" variant="outlined" sx={{ width: '40%', minWidth: '80px' }}>
             {buttonText}
           </Button>
         </Box>
