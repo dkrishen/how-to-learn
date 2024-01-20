@@ -3,4 +3,5 @@
 public class SectionPostDto
 {
     public string Title { get; set; } = null!;
+    public string[]? Topics { get; set; }
 }

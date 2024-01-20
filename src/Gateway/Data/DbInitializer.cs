@@ -4,6 +4,7 @@ public class DbInitializer
 {
     public static void Initialize(HowToLearnDbContext context)
     {
-        context.Database.EnsureCreated();
+        if(context.Database.EnsureCreated())
+            DbFeeder.Feed(context);
     }
 }

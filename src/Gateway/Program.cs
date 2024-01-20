@@ -15,6 +15,7 @@ builder.Services.AddDbContext<HowToLearnDbContext>(options =>
     options.UseSqlServer(builder.Configuration["Data:Database:ConnectionString"]);
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTransient<ISectionTopicRepository, SectionTopicRepository>();
 builder.Services.AddTransient<ISectionRepository, SectionRepository>();
 builder.Services.AddTransient<ITopicRepository, TopicRepository>();
 builder.Services.AddTransient<IKeyRepository, KeyRepository>();
@@ -38,11 +39,10 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 
-try
+using (var serviceScope = app.Services.CreateScope())
 {
-    var context = app.Services.GetRequiredService<HowToLearnDbContext>();
+    var context = serviceScope.ServiceProvider.GetService<HowToLearnDbContext>();
     DbInitializer.Initialize(context);
 }
-catch { }
 
 app.Run();

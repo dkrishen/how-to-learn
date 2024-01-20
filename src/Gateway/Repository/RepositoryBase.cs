@@ -21,7 +21,7 @@ public class RepositoryBase
             .ToListAsync()
             .ConfigureAwait(false);
 
-    protected async Task AddOperationAsync<T>(T newObj) where T : class, IIdentifiedObject
+    protected async Task<Guid> AddOperationAsync<T>(T newObj) where T : class, IIdentifiedObject
     {
         await GetDbSet<T>()
             .AddAsync(newObj)
@@ -30,6 +30,8 @@ public class RepositoryBase
         await context
             .SaveChangesAsync()
             .ConfigureAwait(false);
+
+        return newObj.Id;
     }
 
     protected async Task RemoveOperationAsync<T>(Guid id) where T : class, IIdentifiedObject

@@ -21,6 +21,6 @@ public class SectionMapperProfile : Profile
         CreateMap<Section, SectionViewDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => src.SectionTopics.Select(st => st.Section.Title ?? null)));
+            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => src.SectionTopics.Select(st => st.Topic.Title ?? null)));
     }
 }

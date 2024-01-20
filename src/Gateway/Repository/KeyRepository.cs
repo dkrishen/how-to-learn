@@ -13,7 +13,7 @@ public class KeyRepository : RepositoryBase, IKeyRepository
     public async Task<IEnumerable<Key>> GetKeysAsync()
         => await this.GetOperationAsync<Key>().ConfigureAwait(false);
 
-    public async Task AddKeyAsync(Key key)
+    public async Task<Guid> AddKeyAsync(Key key)
         => await this.AddOperationAsync(key).ConfigureAwait(false);
 
     public async Task RemoveKeyAsync(Guid id)
