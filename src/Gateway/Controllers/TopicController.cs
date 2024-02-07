@@ -30,6 +30,13 @@ public class TopicController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("BySection/{id}")]
+    public async Task<IActionResult> GetBySection(Guid id)
+    {
+        var result = await _topicLogic.GetAsync().ConfigureAwait(false);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] TopicPostDto topic)
     {

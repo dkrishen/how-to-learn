@@ -26,6 +26,16 @@ builder.Services.AddTransient<IKeyLogic, KeyLogic>();
 builder.Services.AddAutoMapper(typeof(SectionMapperProfile));
 builder.Services.AddAutoMapper(typeof(TopicMapperProfile));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -34,6 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
