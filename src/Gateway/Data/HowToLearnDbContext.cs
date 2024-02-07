@@ -17,8 +17,6 @@ public partial class HowToLearnDbContext : DbContext
 
     public IConfiguration Configuration { get; }
 
-    public virtual DbSet<Key> Keys { get; set; }
-
     public virtual DbSet<Section> Sections { get; set; }
 
     public virtual DbSet<SectionTopic> SectionTopics { get; set; }
@@ -37,18 +35,6 @@ public partial class HowToLearnDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Key>(entity =>
-        {
-            entity.ToTable("Key");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
-            entity.HasOne(d => d.ReferenceNavigation).WithMany(p => p.KeyReferenceNavigations)
-                .HasForeignKey(d => d.Reference)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Key_Topic");
-        });
-
         modelBuilder.Entity<Section>(entity =>
         {
             entity.ToTable("Section");
