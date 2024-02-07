@@ -7,7 +7,7 @@ using Gateway.Repository;
 
 namespace Gateway.Logic;
 
-public class SectionLogic : ISectionLogic
+public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, SectionUpdateDto>, ISectionLogic
 {
     private readonly ISectionTopicRepository _sectionTopicRepository;
     private readonly ISectionRepository _sectionRepository;
@@ -15,6 +15,7 @@ public class SectionLogic : ISectionLogic
     private readonly IMapper _mapper;
 
     public SectionLogic(ISectionRepository sectionRepository, ISectionTopicRepository sectionTopicRepository, ITopicRepository topicRepository, IMapper mapper)
+        : base(sectionRepository, mapper)
     {
         _sectionTopicRepository = sectionTopicRepository;
         _sectionRepository = sectionRepository;
@@ -22,17 +23,13 @@ public class SectionLogic : ISectionLogic
         _mapper = mapper;
     }
 
-    public async Task<SectionViewDto> GetSectionAsync(Guid id)
-        => _mapper.Map<SectionViewDto>(
-            await _sectionRepository.GetSectionAsync(id).ConfigureAwait(false));
-
-    public async Task<IEnumerable<SectionViewDto>> GetSectionsAsync()
+    public override async Task<IEnumerable<SectionViewDto>> GetAsync()
         => _mapper.Map<IEnumerable<SectionViewDto>>(
             await _sectionRepository.GetFullSectionsAsync().ConfigureAwait(false));
 
-    public async Task AddSectionAsync(SectionPostDto section)
+    public override async Task<Guid> AddAsync(SectionPostDto section)
     { 
-        var sectionId = await _sectionRepository.AddSectionAsync(
+        var sectionId = await _sectionRepository.AddAsync(
             _mapper.Map<Section>(section)).ConfigureAwait(false);
 
         var topics = await _topicRepository.GetTopicsByTitlesAsync(section.Topics)
@@ -40,19 +37,14 @@ public class SectionLogic : ISectionLogic
 
         foreach ( var topic in topics)
         {
-            await _sectionTopicRepository.AddSectionTopicAsync(new SectionTopic
+            await _sectionTopicRepository.AddAsync(new SectionTopic
             {
                 TopicId = topic.Id,
                 SectionId = sectionId,
                 Id = Guid.NewGuid()
             });
         }
+
+        return sectionId;
     }
-
-    public async Task DeleteSectionAsync(Guid id)
-        => await _sectionRepository.RemoveSectionAsync(id).ConfigureAwait(false);
-
-    public async Task UpdateSectionAsync(SectionUpdateDto section)
-        => await _sectionRepository.UpdateSectionAsync(
-            _mapper.Map<Section>(section)).ConfigureAwait(false);
 }

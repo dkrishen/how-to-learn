@@ -19,35 +19,35 @@ public class KeyController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var result = await _keyLogic.GetKeyAsync(id).ConfigureAwait(false);
+        var result = await _keyLogic.GetAsync(id).ConfigureAwait(false);
         return Ok(result);
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var result = await _keyLogic.GetKeysAsync().ConfigureAwait(false);
+        var result = await _keyLogic.GetAsync().ConfigureAwait(false);
         return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] KeyPostDto key)
     {
-        await _keyLogic.AddKeyAsync(key).ConfigureAwait(false);
+        await _keyLogic.AddAsync(key).ConfigureAwait(false);
         return Ok();
     }
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] Guid id)
     {
-        await _keyLogic.DeleteKeyAsync(id).ConfigureAwait(false);
+        await _keyLogic.RemoveAsync(id).ConfigureAwait(false);
         return Ok();
     }
 
     [HttpPut]
     public async Task<IActionResult> Put([FromBody] KeyUpdateDto key)
     {
-        await _keyLogic.UpdateKeyAsync(key).ConfigureAwait(false);
+        await _keyLogic.UpdateAsync(key).ConfigureAwait(false);
         return Ok();
     }
 }

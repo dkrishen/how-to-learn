@@ -2,9 +2,7 @@
 
 public class KeyPostDto
 {
-    public Guid Id { get; set; }
+    public string Value { get; set; }
 
-    public Guid Parent { get; set; }
-
-    public Guid Reference { get; set; }
+    public string Topic { get; set; }
 }

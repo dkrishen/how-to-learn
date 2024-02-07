@@ -11,16 +11,11 @@ public class SectionMapperProfile : Profile
     public SectionMapperProfile()
     {
         CreateMap<SectionPostDto, Section>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
-        CreateMap<SectionUpdateDto, Section>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+        CreateMap<SectionUpdateDto, Section>();
 
         CreateMap<Section, SectionViewDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => src.SectionTopics.Select(st => st.Topic.Title ?? null)));
     }
 }

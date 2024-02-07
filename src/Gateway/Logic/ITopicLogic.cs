@@ -4,11 +4,6 @@ using Gateway.Models.View;
 
 namespace Gateway.Logic;
 
-public interface ITopicLogic
+public interface ITopicLogic : ILogicCrud<TopicViewDto, TopicPostDto, TopicUpdateDto>
 {
-    public Task<TopicViewDto> GetTopicAsync(Guid id);
-    public Task<IEnumerable<TopicViewDto>> GetTopicsAsync();
-    public Task AddTopicAsync(TopicPostDto topic);
-    public Task UpdateTopicAsync(TopicUpdateDto topic);
-    public Task DeleteTopicAsync(Guid id);
 }

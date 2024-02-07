@@ -4,11 +4,6 @@ using Gateway.Models.View;
 
 namespace Gateway.Logic;
 
-public interface IKeyLogic
+public interface IKeyLogic : ILogicCrud<KeyViewDto, KeyPostDto, KeyUpdateDto>
 {
-    public Task<KeyViewDto> GetKeyAsync(Guid id);
-    public Task<IEnumerable<KeyViewDto>> GetKeysAsync();
-    public Task AddKeyAsync(KeyPostDto Key);
-    public Task UpdateKeyAsync(KeyUpdateDto Key);
-    public Task DeleteKeyAsync(Guid id);
 }

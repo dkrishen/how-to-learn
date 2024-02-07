@@ -19,35 +19,35 @@ public class TopicController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var result = await _topicLogic.GetTopicAsync(id).ConfigureAwait(false);
+        var result = await _topicLogic.GetAsync(id).ConfigureAwait(false);
         return Ok(result);
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var result = await _topicLogic.GetTopicsAsync().ConfigureAwait(false);
+        var result = await _topicLogic.GetAsync().ConfigureAwait(false);
         return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] TopicPostDto topic)
     {
-        await _topicLogic.AddTopicAsync(topic).ConfigureAwait(false);
+        await _topicLogic.AddAsync(topic).ConfigureAwait(false);
         return Ok();
     }
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] Guid id)
     {
-        await _topicLogic.DeleteTopicAsync(id).ConfigureAwait(false);
+        await _topicLogic.RemoveAsync(id).ConfigureAwait(false);
         return Ok();
     }
 
     [HttpPut]
     public async Task<IActionResult> Put([FromBody] TopicUpdateDto topic)
     {
-        await _topicLogic.UpdateTopicAsync(topic).ConfigureAwait(false);
+        await _topicLogic.UpdateAsync(topic).ConfigureAwait(false);
         return Ok();
     }
 }

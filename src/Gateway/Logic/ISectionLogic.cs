@@ -4,11 +4,6 @@ using Gateway.Models.View;
 
 namespace Gateway.Logic;
 
-public interface ISectionLogic
+public interface ISectionLogic : ILogicCrud<SectionViewDto, SectionPostDto, SectionUpdateDto> 
 {
-    public Task<SectionViewDto> GetSectionAsync(Guid id);
-    public Task<IEnumerable<SectionViewDto>> GetSectionsAsync();
-    public Task AddSectionAsync(SectionPostDto section);
-    public Task UpdateSectionAsync(SectionUpdateDto section);
-    public Task DeleteSectionAsync(Guid id);
 }

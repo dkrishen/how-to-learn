@@ -43,15 +43,10 @@ public partial class HowToLearnDbContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.ParentNavigation).WithMany(p => p.KeyParentNavigations)
-                .HasForeignKey(d => d.Parent)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Key_Topic");
-
             entity.HasOne(d => d.ReferenceNavigation).WithMany(p => p.KeyReferenceNavigations)
                 .HasForeignKey(d => d.Reference)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Key_Topic1");
+                .HasConstraintName("FK_Key_Topic");
         });
 
         modelBuilder.Entity<Section>(entity =>
