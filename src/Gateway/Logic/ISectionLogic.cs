@@ -6,4 +6,5 @@ namespace Gateway.Logic;
 
 public interface ISectionLogic : ILogicCrud<SectionViewDto, SectionPostDto, SectionUpdateDto> 
 {
+    public Task<IEnumerable<SectionViewDto>> GenerateResponse(string request);
 }

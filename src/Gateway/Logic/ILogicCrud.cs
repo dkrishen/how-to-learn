@@ -1,4 +1,6 @@
-﻿namespace Gateway.Logic;
+﻿using Gateway.Core.Models;
+
+namespace Gateway.Logic;
 
 public interface ILogicCrud<TView, TPost, TUpdate> 
     where TView : class 
@@ -6,7 +8,7 @@ public interface ILogicCrud<TView, TPost, TUpdate>
     where TUpdate : class
 {
     public Task<TView> GetAsync(Guid id);
-    public Task<IEnumerable<TView>> GetAsync();
+    public Task<DataWithSlicePagination<TView>> GetAsync(Queries? options);
     public Task<Guid> AddAsync(TPost obj);
     public Task RemoveAsync(Guid id);
     public Task UpdateAsync(TUpdate obj);

@@ -28,5 +28,12 @@ public class TopicRepository : RepositoryCrud<Topic>, ITopicRepository
     public async Task<IEnumerable<Topic>> GetTopicsByTitlesAsync(string[] titles)
         => await context.Topics
             .Where(t => titles.Contains(t.Title))
-            .ToListAsync().ConfigureAwait(false);  
+            .ToListAsync().ConfigureAwait(false);
+
+    public async Task<IEnumerable<Topic>> GetTopicsBySectionAsync(Guid id)
+    => await context.Topics
+        .Include(t => t.SectionTopics)
+        .ThenInclude( st => st.Section)
+        .Where(t => t.SectionTopics.Select(st => st.SectionId).Contains(id))
+        .ToListAsync().ConfigureAwait(false);
 }

@@ -16,6 +16,6 @@ public class SectionMapperProfile : Profile
         CreateMap<SectionUpdateDto, Section>();
 
         CreateMap<Section, SectionViewDto>()
-            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => src.SectionTopics.Select(st => st.Topic.Title ?? null)));
+            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => src.SectionTopics.Select(st => st.Topic.Title ?? null).ToArray()));
     }
 }

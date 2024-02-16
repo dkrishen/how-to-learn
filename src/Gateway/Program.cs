@@ -5,6 +5,7 @@ using Gateway.Logic.Profiles;
 using Gateway.Repository;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -18,10 +19,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<ISectionTopicRepository, SectionTopicRepository>();
 builder.Services.AddTransient<ISectionRepository, SectionRepository>();
 builder.Services.AddTransient<ITopicRepository, TopicRepository>();
-builder.Services.AddTransient<IKeyRepository, KeyRepository>();
 builder.Services.AddTransient<ISectionLogic, SectionLogic>();
 builder.Services.AddTransient<ITopicLogic, TopicLogic>();
-builder.Services.AddTransient<IKeyLogic, KeyLogic>();
+builder.Services.AddTransient<IElasticRepository, ElasticRepository>();
 
 builder.Services.AddAutoMapper(typeof(SectionMapperProfile));
 builder.Services.AddAutoMapper(typeof(TopicMapperProfile));

@@ -6,4 +6,5 @@ namespace Gateway.Logic;
 
 public interface ITopicLogic : ILogicCrud<TopicViewDto, TopicPostDto, TopicUpdateDto>
 {
+    public Task<TopicViewDto[]> GetTopicsBySectionAsync(Guid sectionId);
 }

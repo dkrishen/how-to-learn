@@ -1,11 +1,14 @@
-﻿using Gateway.Logic;
+﻿using Gateway.Core.Models;
+using Gateway.Logic;
+using Gateway.Models.Delete;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Controllers;
 
-[Route("api/[controller]")]
+//[Route("api/[controller]")]
+[Route("api/topic")]
 [ApiController]
 public class TopicController : ControllerBase
 {
@@ -24,16 +27,21 @@ public class TopicController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(int page = 0, int pageSize = 20, string? pattern = null)
     {
-        var result = await _topicLogic.GetAsync().ConfigureAwait(false);
+        var result = await _topicLogic.GetAsync(new Queries()
+        {
+            Page = page,
+            PageSize = pageSize,
+            Pattern = pattern
+        }).ConfigureAwait(false);
         return Ok(result);
     }
 
-    [HttpGet("BySection/{id}")]
+    [HttpGet("by-section/{id}")]
     public async Task<IActionResult> GetBySection(Guid id)
     {
-        var result = await _topicLogic.GetAsync().ConfigureAwait(false);
+        var result = await _topicLogic.GetTopicsBySectionAsync(id).ConfigureAwait(false);
         return Ok(result);
     }
 
@@ -45,9 +53,9 @@ public class TopicController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] Guid id)
+    public async Task<IActionResult> Delete([FromBody] TopicDeleteDto topic)
     {
-        await _topicLogic.RemoveAsync(id).ConfigureAwait(false);
+        await _topicLogic.RemoveAsync(topic.Id).ConfigureAwait(false);
         return Ok();
     }
 

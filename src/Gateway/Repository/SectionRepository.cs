@@ -13,4 +13,17 @@ public class SectionRepository : RepositoryCrud<Section>, ISectionRepository
             .Include(s => s.SectionTopics)
             .ThenInclude(st => st.Topic)
             .ToListAsync().ConfigureAwait(false);
+
+    public async Task<IEnumerable<Section>> GetFullSectionsAsync(int page, int pageSize)
+        => await context.Sections
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .Include(s => s.SectionTopics)
+            .ThenInclude(st => st.Topic)
+            .ToListAsync().ConfigureAwait(false);
+
+    //public Task<IEnumerable<Section>> GetFullSectionsByTopicsAsync(IEnumerable<Guid> topicIds)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

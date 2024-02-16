@@ -1,7 +1,12 @@
-﻿namespace Gateway.Models.Post;
+﻿using System.Text.Json.Serialization;
+
+namespace Gateway.Models.Post;
 
 public class SectionPostDto
 {
+    [JsonPropertyName("title")]
     public string Title { get; set; } = null!;
-    public string[]? Topics { get; set; }
+    
+    [JsonPropertyName("topics")]
+    public Guid[]? Topics { get; set; }
 }

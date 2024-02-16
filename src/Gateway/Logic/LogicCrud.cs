@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gateway.Core.Models;
 using Gateway.Repository;
 
 namespace Gateway.Logic
@@ -26,9 +27,43 @@ namespace Gateway.Logic
             => _mapper.Map<TView>(
                 await _repository.GetAsync(id).ConfigureAwait(false));
 
-        public virtual async Task<IEnumerable<TView>> GetAsync()
-            => _mapper.Map<IEnumerable<TView>>(
-                await _repository.GetAsync().ConfigureAwait(false));
+        public virtual async Task<DataWithSlicePagination<TView>> GetAsync(Queries? options)
+        {
+            DataWithSlicePagination<TView> result = new DataWithSlicePagination<TView>()
+            {
+                Items = null,
+                IsLast = true
+            };
+
+            if (options == null)
+            {
+                result.Items = _mapper.Map<IEnumerable<TView>>(
+                    await _repository.GetAsync()
+                        .ConfigureAwait(false))
+                    .ToArray();
+            }
+            else if( options.Pattern != null)
+            {
+                result.Items = _mapper.Map<IEnumerable<TView>>(
+                    await _repository.GetAsync(options.Pattern)
+                        .ConfigureAwait(false))
+                    .ToArray();
+            }
+            else
+            {
+                result.Items = _mapper.Map<IEnumerable<TView>>(
+                    await _repository.GetAsync((int)options.Page, (int)options.PageSize)
+                        .ConfigureAwait(false))
+                    .ToArray();
+
+                result.IsLast = (int)options.Page * (int)options.PageSize + (int)options.PageSize
+                        >= (await _repository.GetCountAsync()
+                            .ConfigureAwait(false))
+                    ? true : false;
+            }
+
+            return result;
+        }
 
         public virtual async Task RemoveAsync(Guid id)
             => await _repository.RemoveAsync(id).ConfigureAwait(false);

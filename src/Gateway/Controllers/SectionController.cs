@@ -1,11 +1,15 @@
-﻿using Gateway.Logic;
+﻿using Gateway.Core.Models;
+using Gateway.Logic;
+using Gateway.Models.Delete;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Gateway.Controllers;
 
-[Route("api/[controller]")]
+//[Route("api/[controller]")]
+[Route("api/section")]
 [ApiController]
 public class SectionController : ControllerBase
 {
@@ -24,9 +28,21 @@ public class SectionController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(int page = 0, int pageSize = 20)
     {
-        var result = await _sectionLogic.GetAsync().ConfigureAwait(false);
+        var result = await _sectionLogic.GetAsync(new Queries()
+        {
+            Page = page,
+            PageSize = pageSize,
+            Pattern = null
+        }).ConfigureAwait(false);
+        return Ok(result);
+    }
+
+    [HttpPost("/by-data")]
+    public async Task<IActionResult> Get([FromBody] PostData data)
+    {
+        var result = await _sectionLogic.GenerateResponse(data.Description).ConfigureAwait(false);
         return Ok(result);
     }
 
@@ -38,9 +54,9 @@ public class SectionController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] Guid id)
+    public async Task<IActionResult> Delete([FromBody] SectionDeleteDto section)
     {
-        await _sectionLogic.RemoveAsync(id).ConfigureAwait(false);
+        await _sectionLogic.RemoveAsync(section.Id).ConfigureAwait(false);
         return Ok();
     }
 

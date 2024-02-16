@@ -40,8 +40,17 @@ public partial class HowToLearnDbContext : DbContext
             entity.ToTable("Section");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Title).HasMaxLength(50);
+            entity.Property(e => e.Title).HasMaxLength(150);
         });
+
+        modelBuilder.Entity<Topic>(entity =>
+        {
+            entity.ToTable("Topic");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Title).HasMaxLength(150);
+        });
+
 
         modelBuilder.Entity<SectionTopic>(entity =>
         {
@@ -51,23 +60,14 @@ public partial class HowToLearnDbContext : DbContext
 
             entity.HasOne(d => d.Section).WithMany(p => p.SectionTopics)
                 .HasForeignKey(d => d.SectionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_SectionTopic_Section");
 
             entity.HasOne(d => d.Topic).WithMany(p => p.SectionTopics)
                 .HasForeignKey(d => d.TopicId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_SectionTopic_Topic");
         });
-
-        modelBuilder.Entity<Topic>(entity =>
-        {
-            entity.ToTable("Topic");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Title).HasMaxLength(50);
-        });
-
         OnModelCreatingPartial(modelBuilder);
     }
 
