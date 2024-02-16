@@ -1,0 +1,26 @@
+{
+  "placeholder": {
+    "enter_input_data_for_generation": "Entering input data for generation",
+    "enter_the_title_field": "Enter the \"Title\" field",
+    "select_topics": "Select topics",
+    "enter_the_description_field": "Enter the \"Description\" field"
+  },
+  "button": {
+    "generate": "Generate",
+    "cancel": "Cancel",
+    "save_changes": "Save changes",
+    "create": "Create"
+  },
+  "text": {
+    "get_scientific_information_on_input_data": "Get scientific information on input data",
+    "no_options": "No options"
+  },
+  "title": {
+    "section_modal_view_mode": "Section Modal View Mode",
+    "section_modal_create_mode": "Section Modal Create Mode",
+    "section_modal_edit_mode": "Section Modal Edit Mode",
+    "topic_modal_view_mode": "Topic Modal View Mode",
+    "topic_modal_create_mode": "Topic Modal Create Mode",
+    "topic_modal_edit_mode": "Topic Modal Edit Mode"
+  }
+}
