@@ -1,43 +1,42 @@
-﻿using Gateway.Models.Entities;
+﻿using Gateway.Models.Elastic;
+using Nest;
 
 namespace Gateway.Repository;
 
 public class ElasticRepository : IElasticRepository
 {
-    public ElasticRepository() { }
-
-    public Task CheckIndexAsync(string indexName)
+    public ElasticRepository(IElasticClient client, IConfiguration configuration)
     {
-        throw new NotImplementedException();
+        _client = client;
     }
 
-    public Task DeleteByIdDocumentAsync(string indexName, Topic topic)
-    {
-        throw new NotImplementedException();
-    }
+    private readonly IElasticClient _client;
 
-    public Task DeleteIndexAsync(string indexName)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<ISearchResponse<TopicElasticDto>> SearchAsync(string key)
+        => await _client.SearchAsync<TopicElasticDto>(s =>
+            s.Query(q =>
+                q.QueryString(d =>
+                    d.Query('*' + key + '*')
+                )   
+            ).Size(1000)
+        ).ConfigureAwait(false);
 
-    public Task<Topic> GetDocumentAsync(string indexName, string id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<ISearchResponse<TopicElasticDto>> SearchAllAsync()
+        => await _client.SearchAsync<TopicElasticDto>(s =>
+            s.Query(q =>
+                q.MatchAll()
+            ).Size(1000)
+        ).ConfigureAwait(false);
 
-    public IEnumerable<List<Topic>> GetDocumentsAsync(string indexName)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IndexResponse> IndexDocumentAsync(TopicElasticDto topic)
+        => await _client.IndexDocumentAsync(topic)
+            .ConfigureAwait(false);
 
-    public Task InsertBuldDocumentsAsync(string indexName, IEnumerable<Topic> topics)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<UpdateResponse<TopicElasticDto>> UpdateDocumentAsync(TopicElasticDto topic)
+        => await _client.UpdateAsync<TopicElasticDto, object>(topic.Id, u => 
+            u.Doc(topic)
+        ).ConfigureAwait(false);
 
-    public Task InsertDocumentAsync(string indexName, Topic topic)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<DeleteResponse> DeleteDocumentAsync(Guid id)
+        => await _client.DeleteAsync<TopicElasticDto>(id).ConfigureAwait(false);
 }

@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using Gateway.Core.Models;
+using Gateway.Models.Elastic;
 using Gateway.Models.Entities;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Gateway.Models.View;
 using Gateway.Repository;
-using Microsoft.Extensions.Options;
 
 namespace Gateway.Logic;
 
@@ -23,26 +22,6 @@ public class TopicLogic : LogicCrud<Topic, TopicViewDto, TopicPostDto, TopicUpda
         _mapper = mapper;
     }
 
-    public override async Task<Guid> AddAsync(TopicPostDto obj)
-    {
-        var topic = _mapper.Map<Topic>(obj);
-        try
-        {
-            var id = await _topicRepository.AddAsync(topic)
-                .ConfigureAwait(false);
-
-        topic.Id = id;
-        //await _elasticRepository.InsertDocumentAsync("",topic)
-        //    .ConfigureAwait(false);
-
-        }catch (Exception ex)
-        {
-
-        }
-        return Guid.Empty;// id;
-
-    }
-
     public async Task<TopicViewDto[]> GetTopicsBySectionAsync(Guid sectionId)
     {
         var result = _mapper.Map<IEnumerable<TopicViewDto>>(
@@ -53,12 +32,26 @@ public class TopicLogic : LogicCrud<Topic, TopicViewDto, TopicPostDto, TopicUpda
         return result;
     }
 
+    public override async Task<Guid> AddAsync(TopicPostDto obj)
+    {
+        var topic = _mapper.Map<Topic>(obj);
+
+        var id = await _topicRepository.AddAsync(topic)
+            .ConfigureAwait(false);
+
+        await _elasticRepository
+            .IndexDocumentAsync(
+                _mapper.Map<TopicElasticDto>(topic)
+            ).ConfigureAwait(false);
+
+        return id;
+    }
+
     public override async Task RemoveAsync(Guid id)
     { 
         await _topicRepository.RemoveAsync(id).ConfigureAwait(false);
-        //await _elasticRepository.RemoveAsync(id).ConfigureAwait (false);
+        await _elasticRepository.DeleteDocumentAsync(id).ConfigureAwait(false);
     }
-
 
     public override async Task UpdateAsync(TopicUpdateDto obj)
     {
@@ -66,7 +59,8 @@ public class TopicLogic : LogicCrud<Topic, TopicViewDto, TopicPostDto, TopicUpda
         await _topicRepository.UpdateAsync(topic)
             .ConfigureAwait(false);
 
-    //    await _elasticRepository.UpdateAsync(topic)
-    //        .ConfigureAwait(false);
+        await _elasticRepository.UpdateDocumentAsync(_mapper.Map<TopicElasticDto>(topic))
+            .ConfigureAwait(false);
+    }
     }
 }

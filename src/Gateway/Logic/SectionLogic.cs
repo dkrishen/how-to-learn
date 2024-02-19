@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Gateway.Core.Models;
+using Gateway.Models.Elastic;
 using Gateway.Models.Entities;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
@@ -111,14 +112,24 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
         }
     }
 
-    public async Task<IEnumerable<SectionViewDto>> GenerateResponse(string request)
+
+    public async Task<IEnumerable<SectionViewDto>> GenerateResponseAsync(string request)
     {
-        //var topics = _elasticRepository.GetAsync(request)
-        //    .ConfigureAwait(false);
+        var topics = (await _elasticRepository.SearchAsync(request).ConfigureAwait(false)).Documents.Select(t => t.Id).ToList();
 
-        throw new NotImplementedException("");
+        var rows = await _sectionRepository.GetFullSectionsByTopicsAsync(topics)
+            .ConfigureAwait(false);
 
-        //return await _sectionRepository.GetFullSectionsByTopicsAsync(new IEnumerable<Guid>())
-        //    .ConfigureAwait(false);
+        return MapRowsToView(rows);
     }
+
+    private IEnumerable<SectionViewDto> MapRowsToView(IEnumerable<RowResponseDto> rows)
+        => rows.GroupBy(r => r.SectionId)
+            .Select(g => new SectionViewDto()
+            {
+                Id = g.Key,
+                Title = g.FirstOrDefault().SectionTitle,
+                Topics = g.Select(r => r.TopicTitle).ToArray()
+            })
+            .ToList();
 }

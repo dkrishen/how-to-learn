@@ -1,4 +1,5 @@
 ﻿using Gateway.Data;
+using Gateway.Models.Elastic;
 using Gateway.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,8 +23,16 @@ public class SectionRepository : RepositoryCrud<Section>, ISectionRepository
             .ThenInclude(st => st.Topic)
             .ToListAsync().ConfigureAwait(false);
 
-    //public Task<IEnumerable<Section>> GetFullSectionsByTopicsAsync(IEnumerable<Guid> topicIds)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    public async Task<IEnumerable<RowResponseDto>> GetFullSectionsByTopicsAsync(IEnumerable<Guid> topicIds)
+        => await context.Sections
+            .Join(context.SectionTopics, s => s.Id, st => st.SectionId, (s, st) => new { Section = s, SectionTopic = st })
+            .Join(context.Topics, st => st.SectionTopic.TopicId, t => t.Id, (st, t) => new { SectionTopic = st, Topic = t })
+            .Where(stt => topicIds.Contains(stt.Topic.Id))
+            .Select(stt => new RowResponseDto()
+            {
+                SectionId = stt.SectionTopic.Section.Id,
+                SectionTitle = stt.SectionTopic.Section.Title,
+                TopicTitle = stt.Topic.Title
+            })
+            .ToListAsync();
 }

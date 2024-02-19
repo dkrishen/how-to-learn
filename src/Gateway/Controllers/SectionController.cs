@@ -39,10 +39,10 @@ public class SectionController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("/by-data")]
+    [HttpPost("by-data/")]
     public async Task<IActionResult> Get([FromBody] PostData data)
     {
-        var result = await _sectionLogic.GenerateResponse(data.Description).ConfigureAwait(false);
+        var result = await _sectionLogic.GenerateResponseAsync(data.Description).ConfigureAwait(false);
         return Ok(result);
     }
 

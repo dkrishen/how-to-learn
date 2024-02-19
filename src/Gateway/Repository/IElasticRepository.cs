@@ -1,15 +1,15 @@
-﻿using Gateway.Models.Entities;
+﻿using Gateway.Models.Elastic;
+using Gateway.Models.Entities;
+using Nest;
 
 namespace Gateway.Repository
 {
     public interface IElasticRepository
     {
-        Task CheckIndexAsync(string indexName);
-        Task InsertDocumentAsync(string indexName, Topic topic);
-        Task DeleteIndexAsync(string indexName);
-        Task DeleteByIdDocumentAsync(string indexName, Topic topic);
-        Task InsertBuldDocumentsAsync(string indexName, IEnumerable<Topic> topics);
-        Task<Topic> GetDocumentAsync(string indexName, string id);
-        IEnumerable<List<Topic>> GetDocumentsAsync(string indexName);
+        Task<ISearchResponse<TopicElasticDto>> SearchAsync(string key);
+        Task<ISearchResponse<TopicElasticDto>> SearchAllAsync();
+        Task<IndexResponse> IndexDocumentAsync(TopicElasticDto topic);
+        Task<UpdateResponse<TopicElasticDto>> UpdateDocumentAsync(TopicElasticDto topic);
+        Task<DeleteResponse> DeleteDocumentAsync(Guid id);
     }
 }

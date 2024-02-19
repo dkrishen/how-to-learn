@@ -1,3 +1,4 @@
+using Gateway.Core.Extenshions;
 using Gateway.Core.Middlwares;
 using Gateway.Data;
 using Gateway.Logic;
@@ -22,6 +23,7 @@ builder.Services.AddTransient<ITopicRepository, TopicRepository>();
 builder.Services.AddTransient<ISectionLogic, SectionLogic>();
 builder.Services.AddTransient<ITopicLogic, TopicLogic>();
 builder.Services.AddTransient<IElasticRepository, ElasticRepository>();
+builder.Services.AddElasticSearch(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(SectionMapperProfile));
 builder.Services.AddAutoMapper(typeof(TopicMapperProfile));

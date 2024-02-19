@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gateway.Models.Elastic;
 using Gateway.Models.Entities;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
@@ -16,5 +17,9 @@ public class TopicMapperProfile : Profile
         CreateMap<TopicUpdateDto, Topic>();
 
         CreateMap<Topic, TopicViewDto>();
+
+        CreateMap<TopicElasticDto, TopicViewDto>();
+
+        CreateMap<Topic, TopicElasticDto>();
     }
 }
