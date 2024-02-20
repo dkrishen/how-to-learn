@@ -1,4 +1,5 @@
-﻿using Gateway.Data;
+﻿using Gateway.Core.Models;
+using Gateway.Data;
 using Gateway.Models.Elastic;
 using Gateway.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,15 @@ public class SectionRepository : RepositoryCrud<Section>, ISectionRepository
             {
                 SectionId = stt.SectionTopic.Section.Id,
                 SectionTitle = stt.SectionTopic.Section.Title,
-                TopicTitle = stt.Topic.Title
+                TopicTitle = stt.Topic.Title,
+                TopicDescription = stt.Topic.Description,
+                TopicId = stt.Topic.Id
             })
             .ToListAsync();
+
+    protected override async Task<IEnumerable<T>> GetOperationAsync<T>(string pattern) where T : class
+        => (IEnumerable<T>)(await context.Sections
+            .Where(o => o.Title.Contains(pattern))
+            .ToListAsync()
+            .ConfigureAwait(false));
 }

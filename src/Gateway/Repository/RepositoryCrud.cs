@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gateway.Repository;
 
-public class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> where T : class, IIdentifiedObject, ITitledObject
+public abstract class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> where T : class, IIdentifiedObject
 {
     public RepositoryCrud(HowToLearnDbContext context) : base(context)
     {
@@ -45,11 +45,7 @@ public class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> where T : cl
             .ToListAsync()
             .ConfigureAwait(false);
 
-    protected async Task<IEnumerable<T>> GetOperationAsync<T>(string pattern) where T : class, IIdentifiedObject, ITitledObject
-        => await GetDbSet<T>()
-            .Where(o => o.Title.Contains(pattern))
-            .ToListAsync()
-            .ConfigureAwait(false);
+    protected abstract Task<IEnumerable<T>> GetOperationAsync<T>(string pattern) where T : class, IIdentifiedObject;
 
     protected async Task<IEnumerable<T>> GetOperationAsync<T>(int page, int pageSize) where T : class, IIdentifiedObject
         => await GetDbSet<T>()

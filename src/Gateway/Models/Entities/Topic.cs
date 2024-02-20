@@ -2,7 +2,7 @@
 
 namespace Gateway.Models.Entities;
 
-public partial class Topic : IIdentifiedObject, ITitledObject
+public partial class Topic : IIdentifiedObject
 {
     public Guid Id { get; set; }
 

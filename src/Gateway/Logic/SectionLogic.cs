@@ -113,7 +113,7 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
     }
 
 
-    public async Task<IEnumerable<SectionViewDto>> GenerateResponseAsync(string request)
+    public async Task<IEnumerable<SectionResponseDto>> GenerateResponseAsync(string request)
     {
         var topics = (await _elasticRepository.SearchAsync(request).ConfigureAwait(false)).Documents.Select(t => t.Id).ToList();
 
