@@ -1,13 +1,13 @@
 ﻿using Gateway.Core.Models;
 using Gateway.Logic;
 using Gateway.Models.Delete;
+using Gateway.Models.Elastic;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Controllers;
 
-//[Route("api/[controller]")]
 [Route("api/topic")]
 [ApiController]
 public class TopicController : ControllerBase
@@ -29,7 +29,7 @@ public class TopicController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int page = 0, int pageSize = 20, string? pattern = null)
     {
-        var result = await _topicLogic.GetAsync(new Queries()
+        var result = await _topicLogic.GetAsync(new QueriesRequestDto()
         {
             Page = page,
             PageSize = pageSize,
@@ -65,4 +65,50 @@ public class TopicController : ControllerBase
         await _topicLogic.UpdateAsync(topic).ConfigureAwait(false);
         return Ok();
     }
+
+    #region elastic
+
+    [HttpGet("elastic/{key}")]
+    public async Task<IActionResult> Search(string key)
+    {
+        var result = await _topicLogic.SearchAsync(key).ConfigureAwait(false);
+        return Ok(result);
+    }
+
+    [HttpGet("elastic")]
+    public async Task<IActionResult> SearchAll()
+    {
+        var result = await _topicLogic.SearchAsync().ConfigureAwait(false);
+        return Ok(result);
+    }
+
+    [HttpPost("elasic")]
+    public async Task<IActionResult> PostTopic([FromBody] TopicPostDto topic)
+    {
+        await _topicLogic.IndexDocumentAsync(topic).ConfigureAwait(false);
+        return Ok();
+    }
+
+    [HttpPost("elasic/analyze")]
+    public async Task<IActionResult> AnalyzeText([FromBody] TextAnalysisDto value)
+    {
+        var result = await _topicLogic.AnalyzeAsync(value.Text).ConfigureAwait(false);
+        return Ok(result);
+    }
+
+    [HttpPut("elasic")]
+    public async Task<IActionResult> PutTopic([FromBody] TopicUpdateDto topic)
+    {
+        await _topicLogic.UpdateDocumentAsync(topic).ConfigureAwait(false);
+        return Ok();
+    }
+
+    [HttpDelete("elasic")]
+    public async Task<IActionResult> DeleteTopic([FromBody] Guid id)
+    {
+        await _topicLogic.DeleteDocumentAsync(id).ConfigureAwait(false);
+        return Ok();
+    }
+
+    #endregion
 }

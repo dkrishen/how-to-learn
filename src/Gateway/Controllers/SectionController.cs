@@ -4,11 +4,9 @@ using Gateway.Models.Delete;
 using Gateway.Models.Post;
 using Gateway.Models.Update;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Gateway.Controllers;
 
-//[Route("api/[controller]")]
 [Route("api/section")]
 [ApiController]
 public class SectionController : ControllerBase
@@ -30,7 +28,7 @@ public class SectionController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int page = 0, int pageSize = 20)
     {
-        var result = await _sectionLogic.GetAsync(new Queries()
+        var result = await _sectionLogic.GetAsync(new QueriesRequestDto()
         {
             Page = page,
             PageSize = pageSize,

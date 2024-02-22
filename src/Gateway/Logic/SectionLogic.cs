@@ -16,6 +16,7 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
     private readonly IElasticRepository _elasticRepository;
     private readonly ITopicRepository _topicRepository;
     private readonly IMapper _mapper;
+    private readonly double _validRanking;
 
     public SectionLogic(ISectionRepository sectionRepository, ISectionTopicRepository sectionTopicRepository, ITopicRepository topicRepository, IMapper mapper, IElasticRepository elasticRepository)
         : base(sectionRepository, mapper)
@@ -25,11 +26,12 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
         _elasticRepository = elasticRepository;
         _topicRepository = topicRepository;
         _mapper = mapper;
+        _validRanking = 0.45;
     }
 
-    public override async Task<DataWithSlicePagination<SectionViewDto>> GetAsync(Queries? options)
+    public override async Task<DataWithSlicePaginationDto<SectionViewDto>> GetAsync(QueriesRequestDto? options)
     {
-        DataWithSlicePagination<SectionViewDto> result = new DataWithSlicePagination<SectionViewDto>()
+        DataWithSlicePaginationDto<SectionViewDto> result = new DataWithSlicePaginationDto<SectionViewDto>()
         {
             Items = null,
             IsLast = true
@@ -38,14 +40,14 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
         if (options == null)
         {
             result.Items = _mapper.Map<IEnumerable<SectionViewDto>>(
-                await _sectionRepository.GetFullSectionsAsync()
+                await _sectionRepository.GetAsync()
                     .ConfigureAwait(false))
                 .ToArray();
         }
         else
         {
             result.Items = _mapper.Map<IEnumerable<SectionViewDto>>(
-                await _sectionRepository.GetFullSectionsAsync((int)options.Page, (int)options.PageSize)
+                await _sectionRepository.GetAsync((int)options.Page, (int)options.PageSize)
                     .ConfigureAwait(false))
                 .ToArray();
 
@@ -57,8 +59,6 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
 
         return result;
     }
-        //=> _mapper.Map<IEnumerable<SectionViewDto>>(
-        //    await _sectionRepository.GetFullSectionsAsync().ConfigureAwait(false));
 
     public override async Task<Guid> AddAsync(SectionPostDto section)
     { 
@@ -112,24 +112,48 @@ public class SectionLogic : LogicCrud<Section, SectionViewDto, SectionPostDto, S
         }
     }
 
-
     public async Task<IEnumerable<SectionResponseDto>> GenerateResponseAsync(string request)
     {
-        var topics = (await _elasticRepository.SearchAsync(request).ConfigureAwait(false)).Documents.Select(t => t.Id).ToList();
+        var analyzedRequest = await AnalyzeAsync(request)
+            .ConfigureAwait(false);
 
-        var rows = await _sectionRepository.GetFullSectionsByTopicsAsync(topics)
+        var topics = (await _elasticRepository
+            .SearchAsync(analyzedRequest)
+            .ConfigureAwait(false));
+
+        var filteredTopicIds = topics.Hits
+            .Where(h => h.Score >= topics.MaxScore * _validRanking)
+            .Select(h => h.Source.Id)
+            .ToList();
+
+        var rows = await _sectionRepository
+            .GetSectionsByTopicsAsync(filteredTopicIds)
             .ConfigureAwait(false);
 
         return MapRowsToView(rows);
     }
 
-    private IEnumerable<SectionViewDto> MapRowsToView(IEnumerable<RowResponseDto> rows)
+    private async Task<string> AnalyzeAsync(string str)
+    {
+        var response = await _elasticRepository
+            .AnalyzeDocumentAsync(str)
+            .ConfigureAwait(false);
+        var query = string.Join(" ", response.Tokens.Select(t => t.Token));
+
+        return query;
+    }
+
+    private IEnumerable<SectionResponseDto> MapRowsToView(IEnumerable<RowResponseDto> rows)
         => rows.GroupBy(r => r.SectionId)
-            .Select(g => new SectionViewDto()
+            .Select(g => new SectionResponseDto()
             {
                 Id = g.Key,
                 Title = g.FirstOrDefault().SectionTitle,
-                Topics = g.Select(r => r.TopicTitle).ToArray()
+                Topics = g.Select(r => new TopicViewDto() {
+                   Title = r.TopicTitle,
+                   Id = r.TopicId,
+                   Description = r.TopicDescription
+                } ).ToArray()
             })
             .ToList();
 }

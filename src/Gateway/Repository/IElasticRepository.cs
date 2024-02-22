@@ -1,5 +1,4 @@
 ﻿using Gateway.Models.Elastic;
-using Gateway.Models.Entities;
 using Nest;
 
 namespace Gateway.Repository
@@ -11,5 +10,6 @@ namespace Gateway.Repository
         Task<IndexResponse> IndexDocumentAsync(TopicElasticDto topic);
         Task<UpdateResponse<TopicElasticDto>> UpdateDocumentAsync(TopicElasticDto topic);
         Task<DeleteResponse> DeleteDocumentAsync(Guid id);
+        Task<AnalyzeResponse> AnalyzeDocumentAsync(string text);
     }
 }

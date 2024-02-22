@@ -34,32 +34,32 @@ public abstract class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> whe
     public virtual async Task<int> GetCountAsync()
         => await this.GetCountOperationAsync<T>().ConfigureAwait(false);
 
+    protected abstract Task<IEnumerable<T>> GetOperationAsync<T>(string pattern) where T : class, IIdentifiedObject;
 
-    protected async Task<T> GetOperationAsync<T>(Guid id) where T : class, IIdentifiedObject
+    private async Task<T> GetOperationAsync<T>(Guid id) where T : class, IIdentifiedObject
         => await GetDbSet<T>()
             .SingleAsync(s => s.Id == id)
             .ConfigureAwait(false);
 
-    protected async Task<IEnumerable<T>> GetOperationAsync<T>() where T : class, IIdentifiedObject
+    private async Task<IEnumerable<T>> GetOperationAsync<T>() where T : class, IIdentifiedObject
         => await GetDbSet<T>()
             .ToListAsync()
             .ConfigureAwait(false);
 
-    protected abstract Task<IEnumerable<T>> GetOperationAsync<T>(string pattern) where T : class, IIdentifiedObject;
 
-    protected async Task<IEnumerable<T>> GetOperationAsync<T>(int page, int pageSize) where T : class, IIdentifiedObject
+    private async Task<IEnumerable<T>> GetOperationAsync<T>(int page, int pageSize) where T : class, IIdentifiedObject
         => await GetDbSet<T>()
             .Skip(page * pageSize)
             .Take(pageSize)
             .ToListAsync()
             .ConfigureAwait(false);
 
-    protected async Task<int> GetCountOperationAsync<T>() where T : class, IIdentifiedObject
+    private async Task<int> GetCountOperationAsync<T>() where T : class, IIdentifiedObject
         => await GetDbSet<T>()
             .CountAsync()
             .ConfigureAwait(false);
 
-    protected async Task<Guid> AddOperationAsync<T>(T newObj) where T : class, IIdentifiedObject
+    private async Task<Guid> AddOperationAsync<T>(T newObj) where T : class, IIdentifiedObject
     {
         await GetDbSet<T>()
             .AddAsync(newObj)
@@ -72,7 +72,7 @@ public abstract class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> whe
         return newObj.Id;
     }
 
-    protected async Task RemoveOperationAsync<T>(Guid id) where T : class, IIdentifiedObject
+    private async Task RemoveOperationAsync<T>(Guid id) where T : class, IIdentifiedObject
     {
         var table = GetDbSet<T>();
 
@@ -88,7 +88,7 @@ public abstract class RepositoryCrud<T> : RepositoryBase, IRepositoryCrud<T> whe
             .ConfigureAwait(false);
     }
 
-    protected async Task UpdateOperationAsync<T>(T updatedObj) where T : class, IIdentifiedObject
+    private async Task UpdateOperationAsync<T>(T updatedObj) where T : class, IIdentifiedObject
     {
         var fields = typeof(T)
             .GetProperties()

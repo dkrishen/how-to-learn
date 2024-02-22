@@ -21,15 +21,17 @@ namespace Gateway.Logic
 
         public virtual async Task<Guid> AddAsync(TPost obj)
             => await _repository.AddAsync(
-                _mapper.Map<T>(obj)).ConfigureAwait(false);
+                _mapper.Map<T>(obj))
+                .ConfigureAwait(false);
 
         public virtual async Task<TView> GetAsync(Guid id)
             => _mapper.Map<TView>(
-                await _repository.GetAsync(id).ConfigureAwait(false));
+                await _repository.GetAsync(id)
+                    .ConfigureAwait(false));
 
-        public virtual async Task<DataWithSlicePagination<TView>> GetAsync(Queries? options)
+        public virtual async Task<DataWithSlicePaginationDto<TView>> GetAsync(QueriesRequestDto? options)
         {
-            DataWithSlicePagination<TView> result = new DataWithSlicePagination<TView>()
+            DataWithSlicePaginationDto<TView> result = new DataWithSlicePaginationDto<TView>()
             {
                 Items = null,
                 IsLast = true
@@ -58,18 +60,19 @@ namespace Gateway.Logic
 
                 result.IsLast = (int)options.Page * (int)options.PageSize + (int)options.PageSize
                         >= (await _repository.GetCountAsync()
-                            .ConfigureAwait(false))
-                    ? true : false;
+                            .ConfigureAwait(false));
             }
 
             return result;
         }
 
         public virtual async Task RemoveAsync(Guid id)
-            => await _repository.RemoveAsync(id).ConfigureAwait(false);
+            => await _repository.RemoveAsync(id)
+                .ConfigureAwait(false);
 
         public virtual async Task UpdateAsync(TUpdate obj)
             => await _repository.UpdateAsync(
-                _mapper.Map<T>(obj)).ConfigureAwait(false);
+                    _mapper.Map<T>(obj)
+                ).ConfigureAwait(false);
     }
 }

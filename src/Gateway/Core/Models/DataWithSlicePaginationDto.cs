@@ -3,7 +3,7 @@ using Gateway.Models.View;
 
 namespace Gateway.Core.Models;
 
-public class DataWithSlicePagination<T> : Data<T> where T : class
+public class DataWithSlicePaginationDto<T> : DataDto<T> where T : class
 {
     [JsonPropertyName("last")]
     public bool IsLast { get; set; }

@@ -1,6 +1,4 @@
-﻿using Gateway.Core.Models;
-
-namespace Gateway.Repository;
+﻿namespace Gateway.Repository;
 
 public interface IRepositoryCrud<T>
 {

@@ -5,9 +5,7 @@ namespace Gateway.Data;
 
 public partial class HowToLearnDbContext : DbContext
 {
-    public HowToLearnDbContext()
-    {
-    }
+    public HowToLearnDbContext() { }
 
     public HowToLearnDbContext(DbContextOptions<HowToLearnDbContext> options, IConfiguration configuration)
         : base(options)

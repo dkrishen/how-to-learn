@@ -2,7 +2,7 @@
 
 namespace Gateway.Core.Models;
 
-public class Data<T> where T : class
+public class DataDto<T> where T : class
 {
     [JsonPropertyName("items")]
     public T[] Items { get; set; }

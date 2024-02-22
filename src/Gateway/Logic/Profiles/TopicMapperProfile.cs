@@ -12,7 +12,9 @@ public class TopicMapperProfile : Profile
     public TopicMapperProfile()
     {
         CreateMap<TopicPostDto, Topic>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            .ForMember(dest => dest.Id, 
+                       opt => opt.MapFrom(src 
+                            => Guid.NewGuid()));
 
         CreateMap<TopicUpdateDto, Topic>();
 

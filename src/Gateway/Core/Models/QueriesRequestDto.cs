@@ -2,7 +2,7 @@
 
 namespace Gateway.Core.Models;
 
-public class Queries
+public class QueriesRequestDto
 {
     [JsonPropertyName("pattern")]
     public string? Pattern { get; set; }
