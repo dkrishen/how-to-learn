@@ -1,7 +1,13 @@
+import { Topic } from "api/topics/types";
+
 export interface Section {
   id: string;
   title: string;
   topics: string[];
+}
+
+export interface SectionByDataResponse extends Omit<Section,'topics'>{
+  topics:Topic[]
 }
 
 export interface SectionsWithPagination {
@@ -10,7 +16,10 @@ export interface SectionsWithPagination {
 }
 
 export interface GetSectionsQueries {
-  pattern?: string;
   page?: number;
   size?: number;
+}
+
+export interface SectionsByDataBody  {
+  description: string
 }

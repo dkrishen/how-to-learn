@@ -13,7 +13,6 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { useLazyGetSectionsByDataQuery } from "api/sections";
-import { useGetTopicsBySectionQuery } from "api/topics";
 
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import TopicModal from "components/molecules/TopicModal";
@@ -29,20 +28,13 @@ const GeneratePlan = () => {
 
   const [selectedSectionId, setSelectedSection] = useState("");
 
-  const { data: topics, refetch: refetchTopics } = useGetTopicsBySectionQuery(
-    selectedSectionId,
-    {
-      skip: !selectedSectionId,
-    }
-  );
-
   const [topicId, setTopicId] = useState("");
 
   const handleClickGenerateButton = () => {
     try {
       setDataForGenerationError(!dataForGeneration);
       if (dataForGeneration) {
-        triggerGetSections(encodeURIComponent(JSON.stringify(dataForGeneration)));
+        triggerGetSections( {description: dataForGeneration} );
       }
     } catch (err) {
       console.error(err);
@@ -108,7 +100,7 @@ const GeneratePlan = () => {
                       disablePadding
                       className="flex flex-col gap-2 w-full pl-4"
                     >
-                      {topics?.map((topic) => {
+                      {section.topics.map((topic) => {
                         return (
                           <ListItem
                             disablePadding
@@ -136,7 +128,7 @@ const GeneratePlan = () => {
           open={!!topicId}
           onClose={() => setTopicId("")}
           topicId={topicId}
-          refetchTopics={refetchTopics}
+          refetchTopics={()=>triggerGetSections( {description: dataForGeneration} )}
         />
       ) : null}
     </>
